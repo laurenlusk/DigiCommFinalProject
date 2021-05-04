@@ -1,6 +1,6 @@
 clear all
 close all
-load('/Users/llusk/Documents/Digi Comms/DigiCommFinalProject/Datasets/dataset_05.mat', 'r')
+load('.\Datasets/snippet_11.mat', 'r')
 addpath('./sig_reconstruction_with_tapers');
 addpath('./sig_reconstruction_with_tapers/Success_Metric');
 
@@ -17,7 +17,7 @@ remove.coeff = 0;
 options.offset = 1;
 % maxTaperNum = 10;
 
-options.dataset = 5;
+options.dataset = 11;
 options.changeNumTapers = 1;
 options.changeSensor = 0;
 options.sensorNum = 5;
@@ -28,9 +28,12 @@ options.REDUCE.S = 1;
 if options.dataset == 5
     options.REDUCE.E = 0.851852;
     options.center = [274 126; 301 308];
-else
+elseif options.dataset == 3
     options.REDUCE.E = 1;
     options.center = [274 244; 301 375];
+else
+    options.REDUCE.E = 1;
+    options.center = [202, 224; 310, 396];
 end
 options.REDUCE.W = 1;
 options.TOL = 0.05;
@@ -135,7 +138,7 @@ for itter = tapNum + 1
     
     [spectro] = create_spectro(true_sensor.',y.',options);
     options.offset = options.offset + 1;
-    [ContrastMatrix(itter,1:8,1:3), tmpCenter, tmpREDUCE] = Contrast_Ratios(true_sensor.',y.',options,win,spectro,2);
+    [ContrastMatrix(itter,1:8,1:3), tmpCenter, tmpREDUCE] = Contrast_Ratios(true_sensor.',y.',options,win,spectro,1);
     if (itter == 1) 
         if ~isequal(options.center,tmpCenter)
             options.center = tmpCenter;

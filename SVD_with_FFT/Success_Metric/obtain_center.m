@@ -14,5 +14,4 @@ function [center] = obtain_center(points, spectro)
     [~, center(2,1)] = min(abs(spectro.r.f - max(x)));
     [~, center(1,2)] = min(abs(spectro.r.t - min(y)));
     [~, center(2,2)] = min(abs(spectro.r.t - max(y)));
-
 end

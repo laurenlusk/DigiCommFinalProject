@@ -1,4 +1,4 @@
-function [ContrastMatrix, center, REDUCE] = Contrast_Ratios(r,options,win,spectro,ADJUST)
+function [ContrastMatrix, center, REDUCE] = Contrast_Ratios(r,options,win,spectro)
  
     % spectro: struct of spectrogram generated values 
     %         (generated in plot_spectrogram)

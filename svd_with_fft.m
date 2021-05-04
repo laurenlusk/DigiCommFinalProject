@@ -1,39 +1,43 @@
 clear all
 close all 
-load('/Users/llusk/Documents/Digi Comms/DigiCommFinalProject/Datasets/dataset_05.mat', 'r')
+load('./Datasets\snippet_11.mat', 'r')
 addpath('./SVD_with_FFT');
 addpath('./SVD_with_FFT/Success_Metric');
 
-frameSize = 512;
-fft_size = frameSize*2;
 threshold = 1e100;
 singularVal = 4:5;
 applyThreshold = 0;
-applySingularVal = 1;
+applySingularVal = 0;
 options.offset = 1;
+options.nFilt = 1;
 
-options.dataset = 5;
 plt.energy = 0;
-plt.contrastRatios = 0;
+plt.contrastRatios = 1;
+
+frameSize = 512;
+fft_size = frameSize*2;
+options.frameSize = frameSize;
+options.fftSize = fft_size;
+
+options.plotting.sensors = 0;
+options.plotting.svd = 1;
+Plotting.CombinedSensors = 0;
 
 options.REDUCE.N = 1;
 options.REDUCE.S = 1;
-if options.dataset == 5
-    options.REDUCE.E = 0.851852;
-    options.center = [274 126; 301 308];
-else
-    if options.dataset == 3
-    options.REDUCE.E = 1;
-    options.center = [274 244; 301 375];
-    end
-end
+options.REDUCE.E = 1;
 options.REDUCE.W = 1;
+options.center = [202, 224; 310, 396];;
+
 options.TOL = 0.05; % Affects buffer size between rectangles 
 options.ANNOTATE = 0;
 options.success.cardinal = 0.75;
 options.success.diagonals = 0.25;
 options.q = 1;
 options.title = "";
+options.applyThreshold = applyThreshold;
+options.applySingularVal = applySingularVal;
+options.svdVal =  singularVal;
 if applyThreshold
     options.title = "threshold of " + int2str(threshold);
 end
@@ -86,13 +90,16 @@ for i=1:nFrames-1
            sv(n,p) = So(p,p);
            S(p,p) = So(p,p);
         end
-    else
+    elseif applyThreshold
         for p = 1:k
-            if applyThreshold
-               if So(p,p) < threshold
-                   S(p,p) = So(p,p);
-               end
-            end
+           if So(p,p) < threshold
+               S(p,p) = So(p,p);
+           end
+            sv(n,p) = S(p,p);
+        end
+    else
+        S = So;
+        for p = 1:k
             sv(n,p) = S(p,p);
         end
     end
@@ -117,16 +124,12 @@ for i=1:nFrames-1
 end
 
 y_freq = sum(ySegmented,2);
-[single_SVD] = time_SVD(sensors,singularVal,frameSize,fft_size);
+[single_SVD] = time_SVD(sensors,options);
 y_time = sum(single_SVD,2);
 
 figure()
 semilogy(sv)
 title("Singular Values (Freq Domain)")
-val = sprintf('SV %d*',1:k);
-val = regexp(val,'*','split');
-lgd_2 = legend(val{1:k},'Location','best');
-title(lgd_2,sprintf('Singular Values\n (Descending Order)'))
 
 figure()
 sgtitle("Freq SVD Estimation for Singular Values" + " (" + options.title + ")")
@@ -145,8 +148,8 @@ end
 [spectro_time] = create_spectro(y_time.',"Time SVD Estimation");
 
 if plt.contrastRatios
-    [ContrastMatrix(1,1:8,1:3), tmpCenter, tmpREDUCE] = Contrast_Ratios(y_freq.',options,win,spectro_freq,2);
-    [ContrastMatrix(2,1:8,1:3), tmpCenter, tmpREDUCE] = Contrast_Ratios(y_time.',options,win,spectro_time,2);
+    [ContrastMatrix(1,1:8,1:3), tmpCenter, tmpREDUCE] = Contrast_Ratios(y_freq.',options,win,spectro_freq);
+    [ContrastMatrix(2,1:8,1:3), tmpCenter, tmpREDUCE] = Contrast_Ratios(y_time.',options,win,spectro_time);
     
     plot_contrast_matrix(ContrastMatrix, options);
 end

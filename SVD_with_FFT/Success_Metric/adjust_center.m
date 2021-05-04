@@ -1,10 +1,10 @@
-function [center] = adjust_center(spectro,r,r_est,options,MAX_PWR)
+function [center] = adjust_center(spectro,r,options,MAX_PWR)
     
     center = options.center;
 
     DONE = 0;
     while (~DONE)
-        create_spectro(r, r_est,options);
+        create_spectro(r,options);
         H = gcf;
         
         [center] = obtain_center(center, spectro);

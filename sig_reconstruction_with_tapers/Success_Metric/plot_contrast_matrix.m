@@ -77,7 +77,7 @@ end
 % title("Average")
 
 figure(options.offset+4*options.n)
-set(gca, 'ColorOrder', ColorCustom_1, 'NextPlot', 'replacechildren');
+set(gca, 'ColorOrder', ColorCustom_2, 'NextPlot', 'replacechildren');
 for i = 1:x
     if mod(i,3) == 0
         plot(2:9,MED(:,i),Marker(3,:),'MarkerSize',7,'LineWidth',2)
