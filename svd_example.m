@@ -1,5 +1,5 @@
 clear all
-% close all 
+close all 
 load('./Datasets\snippet_11.mat', 'r')
 addpath('./SVD_with_FFT');
 addpath('./SVD_with_FFT/Success_Metric');

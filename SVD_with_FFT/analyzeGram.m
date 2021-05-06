@@ -1,7 +1,13 @@
-function [sv, sv_th] = analyzeGram(data,options)
+function [e_vec, e_val, sv, sv_th] = analyzeGram(data,options)
 
     gram = data'*data;
+    % calculates eigenvectors and eigenvalues
+    [e_vec_tmp, e_val_tmp] = eig(gram, 'vector');
+    [e_val, idx] = sort(e_val_tmp,'descend');
+    e_vec = e_vec_tmp(:,idx); % Columns are eigenvectors for each eigenvalue
+    % calculates all singular values
     sv = sort(svd(gram),'descend');
+    % calculates the singular values used for reconstruction
     sv_th = zeros(size(sv));
     if options.applyThreshold
         for p = 1:length(sv)
@@ -19,5 +25,4 @@ function [sv, sv_th] = analyzeGram(data,options)
     else
         sv_th = sv;
     end
-
 end

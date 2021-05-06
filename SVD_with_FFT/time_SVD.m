@@ -15,15 +15,18 @@ function [single_SVD] = time_SVD(r,options)
     single_SVD = zeros(n,k);
     sv_th = zeros(ceil((n-win.m_ovr)/win.m_ovr),k);
     sv = zeros(ceil((n-win.m_ovr)/win.m_ovr),k);
-    cRaw = zeros(ceil((n-win.m_ovr)/win.m_ovr),k*k);
+    % use eigenvectors and values to combine sensors
+    % currently unfinished
+    e_val = zeros(ceil((n-win.m_ovr)/win.m_ovr),k);
+    e_vec = zeros(ceil((n-win.m_ovr)/win.m_ovr),k,k);
     q = 0;
     for i = 1:win.m_ovr:(n-m)
         q = q + 1;
         if i+m <= n  
-            [sv(q,:),sv_th(q,:)] = analyzeGram(r(i:i+m-1,:),options);
+            [e_vec(q,:,:), e_val(q,:), sv(q,:),sv_th(q,:)] = analyzeGram(r(i:i+m-1,:),options);
             [single_SVD(i:i+m-1,:)] = single_SVD(i:i+m-1,:) + getSVD(r(i:i+m-1,:),SVD_VALUE).*win.window;   
         else
-            [sv(q,:),sv_th(q,:)] = analyzeGram(r(i:i+m-1,:),options);
+            [e_vec(q,:,:), e_val(q,:), sv(q,:),sv_th(q,:)] = analyzeGram(r(i:i+m-1,:),options);
             single_SVD(i:n,:) = single_SVD(i:n,:) + getSVD(r(i:n,:),SVD_VALUE).*win.window(1:n-i+1,:);
         end   
     end
