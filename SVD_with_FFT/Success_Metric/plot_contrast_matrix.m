@@ -1,7 +1,8 @@
 function plot_contrast_matrix(ContrastMatrix,options)
 
 %define your custom color order
-ColorCustom_1 = [0 0 1;...
+ColorCustom_1 = [0 0 0;...
+                 0 0 1;...
                  220/255 20/255, 60/255;...
                  0.4660, 0.6740, 0.1880;...
                  0.75, 0, 0.75;...
@@ -51,8 +52,10 @@ for i = 1:x
     hold on
 end
 hold off
-legend(cellstr(txt.'))
+lgd = legend(cellstr(txt.'));
+title(lgd,"Singular Values")
 xlabel("Boxes") 
 ylabel("Contrast Ratio (dB)")
+set(gca,'FontSize',14)
 options.offset = options.offset + 1;
 end

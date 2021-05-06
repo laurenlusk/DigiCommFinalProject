@@ -1,5 +1,7 @@
 function [ContrastMatrix, center, REDUCE] = Contrast_Ratios(r,options,win,spectro)
- 
+
+    % This code was provided by Regan Williamson.
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     % spectro: struct of spectrogram generated values 
     %         (generated in plot_spectrogram)
     % ANNOTATE: bool to control plotting of rectangular areas (1 to plot)

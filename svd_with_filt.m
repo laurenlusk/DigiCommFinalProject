@@ -7,7 +7,7 @@ addpath('./SVD_with_FFT/Success_Metric');
 options.frameSize = 512;
 options.fftSize = options.frameSize*2;
 threshold = 1e100;
-nChan = 20;
+nChan = 10;
 options.svdVal =  3:4;
 
 options.applyThreshold = 0;
@@ -53,8 +53,11 @@ for x = 1:nChan
         filt_plt = figure();
         [H]=freqz(h,1,nfft,'whole',1) ;
         ff = [0:(nfft-1)]/nfft - 0.5;
-        plot(ff,db(fftshift(H)))
-        saveas(filt_plt,"SVD_with_FFT\figures\filt"+num2str(x)+".jpeg")
+        plot(ff,db(fftshift(H)),'LineWidth',1.25)
+        ylabel("Magnitude (dB)")
+        xlabel('Normalized Frequency (\times \pi rad/sample)')
+        set(gca,'FontSize',13)
+        saveas(filt_plt,"SVD_with_FFT\figures\filt"+num2str(x)+".jpg")
         [n,k] = size(r) ;
         rr = zeros(size(r));
         for col=1:k

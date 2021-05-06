@@ -1,6 +1,6 @@
 function plot_svd(sv, tle)
 
-    semilogy(sv)
+    semilogy(sv,'LineWidth',1.25)
     title(tle)
 %     S = sprintf('SV %d*',1:k);
 %     C = regexp(S,'*','split');

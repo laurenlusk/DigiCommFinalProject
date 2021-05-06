@@ -30,7 +30,7 @@ function [single_SVD] = time_SVD(r,options)
     
     if Plotting.Sensors
         figure()
-        sgtitle(sprintf("Time SVD Estimation for Singular Values: " + int2str(SVD_VALUE)))
+        sgtitle(sprintf("SVD Estimation for Singular Values: " + int2str(SVD_VALUE)))
         ax = zeros(k,1);
         cLimits = 0;
         for i = 1:k
@@ -43,12 +43,18 @@ function [single_SVD] = time_SVD(r,options)
             % [ContrastMatrix, center, REDUCE] = contrast_ratios(single_SVD(:,i),...
             %                                    options,win,spectro,i);
         end
+        ylabel("Magnitude (dB)")
+        xlabel("Frame Number")
     end
     
     if Plotting.SVD
         svd_plt = figure();
-        plot_svd(sv, "Singular Values (Time Domain)")
-        saveas(svd_plt,"./SVD_with_FFT\figures\svd_filt"+num2str(options.nFilt)+".jpeg")
+        plot_svd(sv, "")
+        ylabel("Magnitude (log scale)")
+        xlabel("Frame Number")
+        set(gca,'FontSize',14)
+        svd_plt.Position(3:4) = [280 420];
+        saveas(svd_plt,"./SVD_with_FFT\figures\svd_filt"+num2str(options.nFilt)+".jpg")
     end
 
 end
