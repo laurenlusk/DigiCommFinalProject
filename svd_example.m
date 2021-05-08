@@ -1,32 +1,33 @@
 clear all
 close all 
-load('./Datasets\snippet_11.mat', 'r')
+load('./Datasets/snippet_1.mat', 'r')
 addpath('./SVD_with_FFT');
 addpath('./SVD_with_FFT/Success_Metric');
 
-sensorNum = 1;
+% sensor number to use for contrast ratios and SVD estimation plots
+sensorNum = 1; 
+% choose which (sequential) svds to reconstruct signal with
+% first column is the first number, and the second column is the end number
+% i.e. [3 8], uses singular values 3-8 inclusive
 svdStartStop = [1 8;...
                 3 8; ...
                 4 8; ...
                 3 4; ...
                 4 4];
+plt.contrastRatios = 1; % 1: plots contrast ratios
+options.applySingularVal = 1; % 1: applys the singular values in svdStartStop
+options.plotting.sensors = 0; % 1: plots waterfall of all sensors for every row of svdStartStop
+options.plotting.svd = 0; % 1: plots the singular values
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 threshold = 1e100;
 options.applyThreshold = 0;
-options.applySingularVal = 0;
-options.offset = 1;
 options.nFilt = 0;
-
-plt.energy = 0;
-plt.contrastRatios = 1;
 
 frameSize = 512;
 fft_size = frameSize*2;
 options.frameSize = frameSize;
 options.fftSize = fft_size;
-
-options.plotting.sensors = 0;
-options.plotting.svd = 0;
 
 options.REDUCE.N = 1;
 options.REDUCE.S = 1;
@@ -59,7 +60,6 @@ for x = 1:num
     end
     [single_SVD] = time_SVD(sensors,options);
     y_time = single_SVD(:,sensorNum);
-%     y_time = sum(single_SVD,2);
 
     [spectro_time] = create_spectro(y_time.',"SVD Estimation");
     [ContrastMatrix(x,1:8,1:3), tmpCenter, tmpREDUCE] = Contrast_Ratios(y_time.',options,win,spectro_time);

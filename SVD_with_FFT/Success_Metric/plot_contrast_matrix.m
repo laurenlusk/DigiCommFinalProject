@@ -56,6 +56,4 @@ lgd = legend(cellstr(txt.'));
 title(lgd,"Singular Values")
 xlabel("Boxes") 
 ylabel("Contrast Ratio (dB)")
-set(gca,'FontSize',14)
-options.offset = options.offset + 1;
 end

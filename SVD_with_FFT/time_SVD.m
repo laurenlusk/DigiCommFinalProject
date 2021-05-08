@@ -55,8 +55,6 @@ function [single_SVD] = time_SVD(r,options)
         plot_svd(sv, "")
         ylabel("Magnitude (log scale)")
         xlabel("Frame Number")
-        set(gca,'FontSize',14)
-        svd_plt.Position(3:4) = [280 420];
         saveas(svd_plt,"./SVD_with_FFT\figures\svd_filt"+num2str(options.nFilt)+".jpg")
     end
 

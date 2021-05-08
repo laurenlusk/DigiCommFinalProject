@@ -1,24 +1,20 @@
 clear all
 close all 
-load('./Datasets\snippet_14.mat', 'r')
+load('./Datasets/snippet_3.mat', 'r')
 addpath('./SVD_with_FFT');
 addpath('./SVD_with_FFT/Success_Metric');
 
-options.frameSize = 512;
-options.fftSize = options.frameSize*2;
-threshold = 1e100;
-nChan = 10;
-options.svdVal =  3:4;
+applyFilter = 1; % 1: turns on filter
+nChan = 10; % number of sub-bands to be created
+options.plotting.svd = 1; % plots singular values of each sub-band
+options.plotting.sensors = 0; % waterfall plots of each sensor for each sub-band
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 options.applyThreshold = 0;
 options.applySingularVal = 0;
-applyFilter = 1;
-options.offset = 1;
-
-options.plotting.sensors = 0;
-options.plotting.svd = 1;
-Plotting.CombinedSensors = 0;
-Plotting.contrastRatios = 0;
+options.svdVal =  3:4;
+options.frameSize = 512;
+options.fftSize = options.frameSize*2;
 
 options.REDUCE.N = 1;
 options.REDUCE.S = 1;
@@ -37,7 +33,7 @@ if options.applySingularVal
 end
 
 ContrastMatrix = zeros(nChan,8,3);
-r = r.' ; % making a “tall” matrix with 8 columns and a large number of rows
+r = r.' ;
 
 for x = 1:nChan
     
@@ -53,10 +49,9 @@ for x = 1:nChan
         filt_plt = figure();
         [H]=freqz(h,1,nfft,'whole',1) ;
         ff = [0:(nfft-1)]/nfft - 0.5;
-        plot(ff,db(fftshift(H)),'LineWidth',1.25)
+        plot(ff,db(fftshift(H)))
         ylabel("Magnitude (dB)")
         xlabel('Normalized Frequency (\times \pi rad/sample)')
-        set(gca,'FontSize',13)
         saveas(filt_plt,"SVD_with_FFT\figures\filt"+num2str(x)+".jpg")
         [n,k] = size(r) ;
         rr = zeros(size(r));
@@ -69,10 +64,5 @@ for x = 1:nChan
     end
     options.nFilt = x;
     [single_SVD] = time_SVD(sensors,options);
-    y_time = sum(single_SVD,2);
-
-    if Plotting.CombinedSensors
-        [spectro_time] = create_spectro(y_time.',"Time SVD Estimation");
-    end
 end
 
